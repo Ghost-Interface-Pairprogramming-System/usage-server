@@ -17,10 +17,13 @@ namespace GIPS.Controllers
         readonly string FILE_NAME = "usages.db";
         readonly string FIRST_CONTACT = "FirstContact";
 
-        //初回起動時に使われる
-        //ユーザーIDを返すと同時に初回起動日をusageに保存する。
-
         // GET api/v1/FirstContact
+
+        /// <summary>
+        /// 初回起動時に使われる
+        /// ユーザーIDを返すと同時に初回起動日をusageに保存する。
+        /// </summary>
+        /// <returns>Guid形式のuserid</returns>
         [Route("FirstContact")]
         [HttpGet]
         public string FirstContact()
@@ -46,8 +49,13 @@ namespace GIPS.Controllers
 
 
 
-        //送られてきたユーザーIDとactionをDBに保存する。
+        //
         // POST api/v1/Usage
+        /// <summary>
+        /// 送られてきたユーザーIDとactionをDBに保存する。
+        /// </summary>
+        /// <returns>UsageRequest型のrequest </returns>
+        /// <param name="request">Request.</param>
         [Route("Usage")]
         [HttpPost]
         public UsageRequest Usage(UsageRequest request)
@@ -58,7 +66,10 @@ namespace GIPS.Controllers
             return request;
         }
 
-        //Usageで一回一回送れなかった場合にまとめてDBに保存するために使う。
+        /// <summary>
+        /// Usageで一回一回送れなかった場合にまとめてDBに保存するために使う。
+        /// </summary>
+        /// <param name="request">Request.</param>
         // POST api/v1/Usages
         [Route("Usages")]
         [HttpPost]
@@ -75,9 +86,11 @@ namespace GIPS.Controllers
         }
 
         //ここから関数
-
-        //userIDをTableに追加する関数
-        void AddUser(Guid userId)
+        /// <summary>
+        /// userIDをTableに追加する関数
+        /// </summary>
+        /// <param name="userId">User identifier.</param>
+        private void AddUser(Guid userId)
         {
             using (var db = new LiteDatabase(FILE_NAME))
             {
@@ -87,8 +100,13 @@ namespace GIPS.Controllers
             }
         }
 
-        //UsageLogTableにログを追加するための関数
-        void AddUsageLog(Guid userId, DateTime date,string act)
+        /// <summary>
+        /// UsageLogTableにログを追加するための関数
+        /// </summary>
+        /// <param name="userId">User identifier.</param>
+        /// <param name="date">行動が実行された時間</param>
+        /// <param name="act">行動を表す文字列</param>
+        private void AddUsageLog(Guid userId, DateTime date,string act)
         {
             using (var db = new LiteDatabase(FILE_NAME))
             {
