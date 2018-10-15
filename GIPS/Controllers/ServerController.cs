@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using LiteDB;
 
@@ -14,7 +15,7 @@ namespace GIPS.Controllers
     [RoutePrefix("api/v1")]
     public class FirstContactController : ApiController
     {
-        readonly string FILE_NAME = "usages.db";
+        readonly string FILE_NAME = HttpRuntime.AppDomainAppPath + "usages.db";
         readonly string FIRST_CONTACT = "FirstContact";
 
         // GET api/v1/FirstContact
@@ -34,7 +35,6 @@ namespace GIPS.Controllers
             Guid userId = Guid.NewGuid();
             //現在の時間を取得
             DateTime date = DateTime.Now;
-
             //DB処理
             AddUser(userId);
 
@@ -49,8 +49,9 @@ namespace GIPS.Controllers
 
 
 
-        //
-        // POST api/v1/Usage
+
+        //POST api/v1/Usage
+
         /// <summary>
         /// 送られてきたユーザーIDとactionをDBに保存する。
         /// </summary>
