@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,9 +14,11 @@ namespace GIPS.Controllers
     [RoutePrefix("api/v1")]
     public class FirstContactController : ApiController
     {
-        readonly string FILE_NAME = "db.db";
+        readonly string FILE_NAME = "usages.db";
         readonly string FIRST_CONTACT = "FirstContact";
 
+        //初回起動時に使われる
+        //ユーザーIDを返すと同時に初回起動日をusageに保存する。
 
         // GET api/v1/FirstContact
         [Route("FirstContact")]
@@ -23,10 +26,6 @@ namespace GIPS.Controllers
         public string FirstContact()
         {
 
-            /*初回起動時に使われる
-             * ユーザーIDを返すと同時に
-             * 初回起動日をusageに保存する。
-             */
 
             //userIDの生成
             Guid userId = Guid.NewGuid();
@@ -47,35 +46,32 @@ namespace GIPS.Controllers
 
 
 
-        // GET api/v1/Usage
+        //送られてきたユーザーIDとactionをDBに保存する。
+        // POST api/v1/Usage
         [Route("Usage")]
         [HttpPost]
-        public void Usage(string userid, string action, DateTime date)
+        public UsageRequest Usage(UsageRequest request)
         {
-            //string Userid , string Action ,DateTime Date 引数
-            /*
-             * 送られてきた
-             *ユーザーIDとactionをDBに保存する。 
-             */
-
-            AddUsageLog(Guid.Parse(userid), date, action);
+            string action = request.RequestAction;
+            DateTime date = request.Date;
+            AddUsageLog(Guid.Parse(request.UserID), date, action);
+            return request;
         }
 
+        //Usageで一回一回送れなかった場合にまとめてDBに保存するために使う。
+        // POST api/v1/Usages
         [Route("Usages")]
         [HttpPost]
-        public void Usages(string userid, Usages usages)
+        public void Usages(UsagesRequest request)
         {
 
-            /*
-             *Usageで一回一回送れなかった場合に
-             *まとめてDBに保存するために使う。
-             */
-            Guid userId = Guid.Parse(userid);
-            string act = usages.Name;
-            foreach (DateTime date in usages.Date)
+            Guid userId = Guid.Parse(request.UserId);
+
+            foreach (Usage usage in request.Usages)
             {
-                AddUsageLog(userId,date,act);
+                AddUsageLog(userId,usage.Date,usage.Action);
             }
+
         }
 
         //ここから関数
@@ -111,29 +107,32 @@ namespace GIPS.Controllers
                         Name = act
                     };
                     usageTable.Insert(usage);
-                    Console.WriteLine("下記をUsagesTableに追加しました");
-                    Console.WriteLine("     ---------- ----------     ");
-                    Console.WriteLine("   ID   : {0} \r\n Action : {1}", usage.ID, usage.Name);
-                    Console.WriteLine("     ---------- ----------     \r\n \r\n");
+
+
+
+                    Debug.WriteLine("下記をUsagesTableに追加しました");
+                    Debug.WriteLine("     ---------- ----------     ");
+                    Debug.WriteLine("   ID   : {0} \r\n Action : {1}", usage.ID, usage.Name);
+                    Debug.WriteLine("     ---------- ----------     \r\n \r\n");
                 }
 
 
                 var actlog = usageTable.FindOne(x => x.Name.Contains(act));
                 UsageLog log = new UsageLog
                 {
-                    ID = new Guid(),
+                    ID = Guid.NewGuid(),
                     UserID = userId,
                     UsageID = actlog.ID,
                     Date = date
                 };
                 usageLogTable.Insert(log);
-                Console.WriteLine("下記をUsageLogTableに追加しました。");
-                Console.WriteLine("     ---------- ----------     ");
-                Console.WriteLine("   ID   : " + log.ID);
-                Console.WriteLine(" UserID : " + log.UserID);
-                Console.WriteLine("UsageID : " + log.UsageID);
-                Console.WriteLine("  Date  : " + log.Date);
-                Console.WriteLine("     ---------- ----------     \r\n \r\n");
+                Debug.WriteLine("下記をUsageLogTableに追加しました。");
+                Debug.WriteLine("     ---------- ----------     ");
+                Debug.WriteLine("   ID   : " + log.ID);
+                Debug.WriteLine(" UserID : " + log.UserID);
+                Debug.WriteLine("UsageID : " + log.UsageID);
+                Debug.WriteLine("  Date  : " + log.Date);
+                Debug.WriteLine("     ---------- ----------     \r\n \r\n");
             }
         }
 

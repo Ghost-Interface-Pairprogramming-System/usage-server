@@ -18,10 +18,10 @@ namespace GIPS.Controllers
         public Guid UsageID { get; set; }
         public DateTime Date { get; set; }
     }
-    public class Usages
+    public class Usage
     {
-        public string Name { get; set; }
-        public DateTime[] Date { get; set; }
+        public string Action { get; set; }
+        public DateTime Date { get; set; }
     }
 
 }
