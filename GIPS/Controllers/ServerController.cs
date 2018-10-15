@@ -86,6 +86,16 @@ namespace GIPS.Controllers
 
         }
 
+        [Route("Usage/List")]
+        [HttpGet]
+        public UsageLog[] UsageList()
+        {
+            using (var db = new LiteDatabase(FILE_NAME))
+            {
+                return db.GetCollection<UsageLog>("UsageLogs").FindAll().ToArray();
+            }            
+        }
+
         //ここから関数
         /// <summary>
         /// userIDをTableに追加する関数
