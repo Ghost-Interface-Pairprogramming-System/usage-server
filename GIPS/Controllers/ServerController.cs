@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using LiteDB;
 
@@ -14,7 +15,7 @@ namespace GIPS.Controllers
     [RoutePrefix("api/v1")]
     public class FirstContactController : ApiController
     {
-        readonly string FILE_NAME = "usages.db";
+        readonly string FILE_NAME = HttpRuntime.AppDomainAppPath + "usages.db";
         readonly string FIRST_CONTACT = "FirstContact";
 
         // GET api/v1/FirstContact
