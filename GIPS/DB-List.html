@@ -28,21 +28,29 @@
         {
             $.ajax(
             {
-                url : 'https://gips-log-dev.azurewebsites.net/api/v1/Usage/List',
+                url : 'http://127.0.0.1:8080/api/v1/Usage/List',
+                // url : 'https://gips-log-dev.azurewebsites.net/api/v1/Usage/List',
                 type : 'GET',
                 dataType : "json"
             })
             .done( (data) =>
             {
-                $.each(data,function(id,list)
+                var action;
+
+                $.each(data['Item1'],function(id,list)
                 {
                     console.log(list);
+                    $.each(data['Item2'],function(actid,act)
+                    {
+                        if(list['UsageID'] === act['ID'])action = act['Name'];
+                        console.log(action);
+                    });
                     $('tbody').append
                     (
                         $('<tr></tr>')
                         .append($('<td></td>')).text(id)
                         .append($('<td></td>').text(list.UserID))
-                        .append($('<td></td>').text(list.UsageID))
+                        .append($('<td></td>').text(action))
                         .append($('<td></td>').text(list.Date))
                     )
                 });

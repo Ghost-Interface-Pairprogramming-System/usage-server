@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using LiteDB;
 
 namespace GIPS.Controllers
@@ -85,14 +86,19 @@ namespace GIPS.Controllers
             }
 
         }
-
+        /// <summary>
+        /// htmlの読み取り用として
+        /// UsageTableとUsageLogTableを送る
+        /// </summary>
+        /// <returns>The list.</returns>
+        [EnableCors("*", "*", "*")]
         [Route("Usage/List")]
         [HttpGet]
-        public UsageLog[] UsageList()
+        public (UsageLog[], UsageClass[]) UsageList()
         {
             using (var db = new LiteDatabase(FILE_NAME))
             {
-                return db.GetCollection<UsageLog>("UsageLogs").FindAll().ToArray();
+                return (db.GetCollection<UsageLog>("UsageLogs").FindAll().ToArray(),db.GetCollection<UsageClass>("Usages").FindAll().ToArray());
             }            
         }
 
