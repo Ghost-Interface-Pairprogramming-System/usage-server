@@ -112,6 +112,7 @@
     <Content Include="Web.config" />
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
+    <Content Include="EmptyHTMLFile.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
