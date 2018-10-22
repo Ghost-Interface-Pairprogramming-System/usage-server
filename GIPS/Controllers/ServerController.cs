@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using LiteDB;
 
 namespace GIPS.Controllers
@@ -91,7 +87,6 @@ namespace GIPS.Controllers
         /// UsageTableとUsageLogTableを送る
         /// </summary>
         /// <returns>The list.</returns>
-        [EnableCors("*", "*", "*")]
         [Route("Usage/List")]
         [HttpGet]
         public (UsageLog[], UsageClass[]) UsageList()
