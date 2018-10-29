@@ -122,6 +122,7 @@
     <Content Include="Global.asax" />
     <Content Include="packages.config" />
     <Content Include="Views\static\db_list.aspx" />
+    <Content Include="Views\static\viewer_page.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">

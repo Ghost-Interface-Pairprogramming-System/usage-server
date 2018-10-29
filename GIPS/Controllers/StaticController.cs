@@ -11,10 +11,14 @@ namespace GIPS.Controllers
             return View("db_list");
         }
 
-        [Route("DBList")]
         public ActionResult DBList()
         {
             return View("db_list");
+        }
+
+        public ActionResult UserViewer()
+        {
+            return View("viewer_page");
         }
     }
 }

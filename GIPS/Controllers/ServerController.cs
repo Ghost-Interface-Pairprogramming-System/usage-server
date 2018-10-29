@@ -97,6 +97,35 @@ namespace GIPS.Controllers
             }            
         }
 
+        /// <summary>
+        /// リクエストされたユーザーの過去７日間のアクションをカウントし
+        /// 返す。
+        /// </summary>
+        [Route("ActionLog")]
+        [HttpGet]
+        public int[] UsageActionLog(string userid)
+        {
+            using (var db = new LiteDatabase(FILE_NAME))
+            {
+                var logs = db.GetCollection<UsageLog>("UsageLogs").FindAll().ToArray();
+                var act = db.GetCollection<UsageClass>("Usages").FindAll().ToArray();
+
+                int[] retlog = new int[7]; 
+
+                DateTime now = DateTime.Now;
+                int[] subs = { 0, -1, -2, -3, -4, -5, -6 };
+
+                var counts = subs.Select((sub) =>
+                {
+                    var d = now.AddDays(sub);
+
+                    return logs.Where((log) => log.UserID == Guid.Parse(userid) && log.Date.Date == d.Date).Count();
+                }).ToArray();
+
+                return counts;
+            }
+        }
+
 
         //ここから関数
         /// <summary>
