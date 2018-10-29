@@ -48,7 +48,6 @@ namespace GIPS.Controllers
 
 
         //POST api/v1/Usage
-
         /// <summary>
         /// 送られてきたユーザーIDとactionをDBに保存する。
         /// </summary>
@@ -71,7 +70,7 @@ namespace GIPS.Controllers
         // POST api/v1/Usages
         [Route("Usages")]
         [HttpPost]
-        public void Usages(UsagesRequest request)
+        public String Usages(UsagesRequest request)
         {
 
             Guid userId = Guid.Parse(request.UserId);
@@ -80,6 +79,7 @@ namespace GIPS.Controllers
             {
                 AddUsageLog(userId,usage.Date,usage.Action);
             }
+            return "スライムテイマー" ;
 
         }
         /// <summary>
