@@ -114,7 +114,7 @@ namespace GIPS.Controllers
 
                 DateTime now = DateTime.Now;
                 int[] subs = { 0, -1, -2, -3, -4, -5, -6 };
-
+               
                 var counts = subs.Select((sub) =>
                 {
                     var d = now.AddDays(sub);
