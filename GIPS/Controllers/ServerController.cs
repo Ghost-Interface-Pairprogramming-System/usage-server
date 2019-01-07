@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -31,7 +32,7 @@ namespace GIPS.Controllers
             //userIDの生成
             Guid userId = Guid.NewGuid();
             //現在の時間を取得
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
             //DB処理
             AddUser(userId);
 
@@ -91,9 +92,11 @@ namespace GIPS.Controllers
         [HttpGet]
         public (UsageLog[], UsageClass[]) UsageList()
         {
+            
             using (var db = new LiteDatabase(FILE_NAME))
             {
-                return (db.GetCollection<UsageLog>("UsageLogs").FindAll().ToArray(),db.GetCollection<UsageClass>("Usages").FindAll().ToArray());
+                return (db.GetCollection<UsageLog>("UsageLogs").FindAll().OrderBy((log) => log.Date).ToArray(),
+                    db.GetCollection<UsageClass>("Usages").FindAll().ToArray());
             }            
         }
 
